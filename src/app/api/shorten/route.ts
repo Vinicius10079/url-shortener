@@ -1,11 +1,14 @@
 import { prisma } from "@/lib/db";
 import { encodeId } from "@/lib/shortcode";
 
+// Rota para criar um novo link encurtado
 export async function POST(req: Request) {
+  // Tenta processar a requisição e criar um novo link encurtado
   try {
     const body = await req.json();
     const { url } = body;
 
+    // Valida se a URL foi fornecida
     if (!url) {
       return Response.json(
         { error: "url is required" },
@@ -30,6 +33,7 @@ export async function POST(req: Request) {
       data: { shortcode },
     });
 
+    // Retorna a URL encurtada para o cliente
     return Response.json(
       {
         short_url: `${process.env.BASE_URL}/${shortcode}`,

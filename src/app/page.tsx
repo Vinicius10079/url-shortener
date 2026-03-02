@@ -7,11 +7,14 @@ export default function Home() {
   const [shortUrl, setShortUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Função para lidar com o clique no botão de encurtar
   async function handleShorten() {
     if (!url) return;
 
+    // Inicia o processo de encurtamento e exibe o estado de carregamento
     setLoading(true);
 
+    // Envia a URL para a API de encurtamento
     try {
       const res = await fetch("/api/shorten", {
         method: "POST",
@@ -31,10 +34,12 @@ export default function Home() {
     }
   }
 
+  // Função para copiar o link encurtado para a área de transferência
   function copyLink() {
     navigator.clipboard.writeText(shortUrl);
   }
 
+  // Renderiza a interface do usuário
   return (
     <main className="min-h-screen bg-gradient-to-br from-green-100 flex items-center justify-center p-6">
       <div className="bg-white shadow-xl rounded-2xl p-10 w-full max-w-lg">
@@ -57,7 +62,7 @@ export default function Home() {
         <button
           onClick={handleShorten}
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+          className="w-full bg-green-600 text-white py-4 rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
         >
           {loading ? "Encurtando..." : "Encurtar"}
         </button>

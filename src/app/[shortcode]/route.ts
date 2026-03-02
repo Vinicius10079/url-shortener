@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 
+// Rota para redirecionar com base no shortcode
 export async function GET(
   _req: Request,
   context: { params: Promise<{ shortcode: string }> }
