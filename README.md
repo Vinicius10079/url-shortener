@@ -1,36 +1,122 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Encurtador de URL
 
-## Getting Started
+Aplicação web para criação e redirecionamento de URLs encurtadas, desenvolvida com Next.js, Prisma e MySQL.
 
-First, run the development server:
+O projeto implementa os principais conceitos por trás de serviços de encurtamento de links, priorizando simplicidade, organização e possibilidade de evolução arquitetural.
+
+---
+
+## Como executar
+
+### Requisitos
+
+* Node.js 20+
+* MySQL 8
+
+### Instalação
+
+```bash
+npm install
+```
+
+Crie um arquivo `.env`:
+
+```
+DATABASE_URL="mysql://user:password@localhost:3306/url_shortener"
+```
+
+Execute as migrations:
+
+```bash
+npx prisma migrate dev
+```
+
+Inicie a aplicação:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Execução com Docker (opcional)
 
-To learn more about Next.js, take a look at the following resources:
+O ambiente Docker existe apenas para facilitar testes ou avaliação.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+docker compose up --build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Funcionalidades
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* Criação de URLs curtas
+* Redirecionamento automático
+* Código curto único baseado em Base62
+* Contagem de acessos
+* Interface web simples
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Endpoints
+
+### Criar URL curta
+
+POST `/api/shorten`
+
+```json
+{
+  "url": "https://example.com"
+}
+```
+
+Resposta:
+
+```json
+{
+  "short_url": "http://localhost:3000/abc123"
+}
+```
+
+---
+
+### Redirecionamento
+
+GET `/{shortcode}`
+
+Redireciona para a URL original utilizando HTTP redirect.
+
+---
+
+## Estrutura do projeto
+
+```
+src/
+ ├─ app/        páginas e rotas (Next.js)
+ ├─ lib/        acesso ao banco e utilidades
+ └─ prisma/     schema e migrations
+```
+
+---
+
+## Decisões técnicas
+
+* O shortcode não é gerado por hash da URL.
+* Cada registro recebe um ID único.
+* O ID é convertido para Base62 para gerar URLs curtas.
+* Essa abordagem evita colisões e mantém consultas eficientes no banco.
+
+A aplicação foi organizada pensando em futura escalabilidade (cache, múltiplas instâncias e balanceamento), mantendo baixo custo e simplicidade no ambiente local.
+
+---
+
+## Objetivo
+
+Projeto desenvolvido para portfólio e estudo, explorando construção de APIs, modelagem de dados e integração completa entre frontend e backend.
